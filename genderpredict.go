@@ -1,10 +1,6 @@
 package main
 
-import (
-	"fmt"
-
-	c "github.com/hstove/gender/classifier"
-)
+import c "github.com/hstove/gender/classifier"
 
 func predictGenderStats(names []string) (f, m float64) {
 	classifier := c.Classifier()
@@ -16,10 +12,6 @@ func predictGenderStats(names []string) (f, m float64) {
 
 		if gender == string(c.Girl) {
 			numFemale += 1
-		}
-
-		if gender == string(c.None) {
-			fmt.Println("Unknown: %s", name)
 		}
 
 		if gender == string(c.Boy) {
