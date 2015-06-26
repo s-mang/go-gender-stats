@@ -4,9 +4,9 @@ Pulls golang contributors list, predicts gender of each first name, prints gende
 ## classifier
 All classification/prediction code lives in `github.com/hstove/gender/classifier`
 
-The `classifier.serialized` is the classifier I built on my machine. I am unsure if it will work on yours, as I'm not sure what the bytes in the file represent.
+The `classifier.serialized` file is the classifier I built on my machine from the data in `github.com/hstove/gender/classifier/names/`. I am unsure if this file will be helpful on your machine, as I don't know what the bytes in the file represent, other than "a classifier".
 
-If it does not work for you, you can find docs on how to re-create this file in `hstove`'s [README](https://github.com/hstove/gender/blob/master/README.md)
+So, if you get stuck, the docs on how to re-create this file are in `hstove`'s [README](https://github.com/hstove/gender/blob/master/README.md). 
 
 ## run
 
