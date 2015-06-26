@@ -14,6 +14,9 @@ func main() {
 	}
 
 	percentFemale := predictPercentFemale(names)
+	percentMale := (100 - percentFemale)
 
-	fmt.Printf("\nFemale Go Contributors: %.2f%%\n\n", percentFemale)
+	fmt.Println("\nGo Contributors by Gender:")
+	fmt.Printf("\n  - Female: %.2f%%\n", percentFemale)
+	fmt.Printf("\n  - Male: %.2f%%\n\n", percentMale)
 }
