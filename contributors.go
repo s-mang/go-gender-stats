@@ -1,23 +1,37 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	"io/ioutil"
+	"net/http"
+	"regexp"
+	"strings"
 )
 
-var logger *log.Logger
+const contribURL = "https://golang.org/CONTRIBUTORS?m=text"
 
-func main() {
-	names, err := getContributorNames()
+var firstNameRegexp = regexp.MustCompile(`\n[^#\n ]+`)
+
+func getContributorNames() ([]string, error) {
+	resp, err := http.Get(contribURL)
 	if err != nil {
-		panic(err.Error())
+		return nil, err
 	}
 
-	percentFemale, percentMale := predictGenderStats(names)
-	percentUnknown := (100 - percentFemale - percentMale)
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
 
-	fmt.Println("\nGo Contributors by Gender:")
-	fmt.Printf("\n  - Female: %.2f%%\n", percentFemale)
-	fmt.Printf("\n  - Male: %.2f%%\n", percentMale)
-	fmt.Printf("\n  - Unknown: %.2f%%\n\n", percentUnknown)
+	return extractNames(data), nil
+
+}
+
+func extractNames(data []byte) []string {
+	firstNames := firstNameRegexp.FindAllString(string(data), -1)
+
+	for i := range firstNames {
+		firstNames[i] = strings.Replace(firstNames[i], "\n", "", -1)
+	}
+
+	return firstNames
 }

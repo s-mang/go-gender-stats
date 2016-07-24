@@ -30,7 +30,7 @@ func predictGenderStats(names []string) (f, m float64) {
 		}
 	}
 
-	printNames(maleNames, femaleNames)
+	//printNames(maleNames, femaleNames)
 
 	numTotal := len(names)
 
