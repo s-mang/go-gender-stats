@@ -1,5 +1,6 @@
 # go-gender-stats
-Pulls golang contributors list, predicts gender of each first name, prints gender stats
+1. pulls golang contributors list, predicts gender of each first name, prints gender stats
+2. pulls gophers slack members list, predicts gender, prints gender stats
 
 ## training data
 I took the name => gender data from [OpenGenderTracking/globalnamedata](https://github.com/OpenGenderTracking/globalnamedata)
@@ -31,6 +32,27 @@ This will generate a new classifier file at `../classifier.serialized`, so be su
 ```bash
 $ go get github.com/adams-sarah/go-gender-stats
 $ go-gender-stats
+```
+
+## output (07/24/2016, OpenGenderTracking Global Name Data)
+
+```
+
+Go Contributors by Gender:
+
+  - Female: 5.18%
+
+  - Male: 94.82%
+
+-------------
+
+Slack Gophers by Gender:
+
+  - Female: 6.39%
+
+  - Male: 93.61%
+
+
 ```
 
 ## output (06/26/2015, OpenGenderTracking Global Name Data)
