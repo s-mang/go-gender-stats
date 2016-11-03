@@ -2,6 +2,13 @@
 1. pulls golang contributors list, predicts gender of each first name, prints gender stats
 2. pulls gophers slack members list, predicts gender, prints gender stats
 
+# Disclaimer
+The purpose of this project is to try to give some (any) statistics to track improvement of the M/F gender ratio
+in the Go community over time.
+
+Please note that heuristic and probabilistic gender classification by first name is horribly imperfect.
+Please also note that gender is not binary, and it is ultimately up to each individual to determine how they identify.
+
 ## training data
 I took the name => gender data from [OpenGenderTracking/globalnamedata](https://github.com/OpenGenderTracking/globalnamedata)
 
