@@ -16,15 +16,11 @@ Quote from their announcement [blog article](http://bocoup.com/weblog/global-nam
 
 > Today, we are releasing Global Name Data, a dataset of birth name-gender mapping which we believe to be the most comprehensive in the world.
 
-It is definitely huge.
-
 
 ## classifier
 The classifier program in classifier/classifier.go is stolen from `github.com/hstove/gender` (thanks @hstove)
 
-The `classifier.serialized` is the classifier I built on my machine. I am unsure if it will work on yours, as I'm not sure what the bytes in the file represent other than "a classifier".
-
-If it does not work for you, you can recreate the file like yourself:
+You will need to recreate the classifier before running `go-gender-stats`:
 
 ```bash
 $ cd $GOPATH/src/github.com/adams-sarah/go-gender-stats/classifier
@@ -39,6 +35,26 @@ This will generate a new classifier file at `../classifier.serialized`, so be su
 ```bash
 $ go get github.com/adams-sarah/go-gender-stats
 $ go-gender-stats
+```
+
+## output (03/09/2017, OpenGenderTracking Global Name Data)
+
+```
+
+Go Contributors by Gender:
+
+  - Female: 5.57%
+
+  - Male: 94.43%
+
+-------------
+
+Slack Gophers by Gender:
+
+  - Female: 6.95%
+
+  - Male: 93.05%
+
 ```
 
 ## output (07/24/2016, OpenGenderTracking Global Name Data)
