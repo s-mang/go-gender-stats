@@ -27,12 +27,15 @@ func getGitHubNamesPerLanguage() []Contributor {
 		log.Fatalf("Failed to create client: %v", err)
 	}
 	myDataset := client.Dataset("tmp_data")
+
+	myDataset.Delete(ctx) // make it empty first
+
 	if err := myDataset.Create(ctx); err != nil {
 		panic(err)
 		// TODO: Handle error.
 	}
 
-	query := client.Query("SELECT commits.author.name as name, commits.repo_name as repo, language.name as language  FROM FLATTEN([bigquery-public-data:github_repos.commits], repo_name) commits JOIN [bigquery-public-data:github_repos.languages] languages ON commits.repo_name=languages.repo_name LIMIT 10")
+	query := client.Query("SELECT commits.author.name as name, commits.repo_name as repo, language.name as language  FROM FLATTEN([bigquery-public-data:github_repos.commits], repo_name) commits JOIN [bigquery-public-data:github_repos.languages] languages ON commits.repo_name=languages.repo_name")
 	query.AllowLargeResults = true
 	query.Dst = myDataset.Table("names_lang")
 	it, err := query.Read(ctx)
