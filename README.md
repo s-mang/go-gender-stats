@@ -9,6 +9,7 @@ in the Go community over time.
 Please note that heuristic and probabilistic gender classification by first name is horribly imperfect.
 Please also note that gender is not binary, and it is ultimately up to each individual to determine how they identify.
 
+# About
 ## training data
 I took the name => gender data from [OpenGenderTracking/globalnamedata](https://github.com/OpenGenderTracking/globalnamedata)
 
@@ -16,8 +17,14 @@ Quote from their announcement [blog article](http://bocoup.com/weblog/global-nam
 
 > Today, we are releasing Global Name Data, a dataset of birth name-gender mapping which we believe to be the most comprehensive in the world.
 
+# Run
+## install
 
-## classifier
+```bash
+$ go get github.com/adams-sarah/go-gender-stats
+```
+
+## re-create classifier
 The classifier program in classifier/classifier.go is stolen from `github.com/hstove/gender` (thanks @hstove)
 
 You will need to recreate the classifier before running `go-gender-stats`:
@@ -33,10 +40,10 @@ This will generate a new classifier file at `../classifier.serialized`, so be su
 ## run
 
 ```bash
-$ go get github.com/adams-sarah/go-gender-stats
 $ go-gender-stats
 ```
 
+# Output over time
 ## output (03/09/2017, OpenGenderTracking Global Name Data)
 
 ```
