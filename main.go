@@ -10,7 +10,7 @@ var logger *log.Logger
 func main() {
 
 	// GitHub Contributors
-	fmt.Println("\nGitHub contrubutors by language and gender:")
+	fmt.Println("\nGitHub contributors by language and gender:")
 	gitHubNames := getFirstNamesPerLanguage(getGitHubNamesPerLanguage())
 	fmt.Println(gitHubNames)
 
