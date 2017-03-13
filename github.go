@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
+
+	"golang.org/x/net/context"
 
 	"google.golang.org/api/iterator"
 
 	"cloud.google.com/go/bigquery"
-	"golang.org/x/net/context"
 )
 
 // Contributor contains all info of a contributer to a repo
@@ -19,32 +21,69 @@ type Contributor struct {
 	Language  string
 }
 
-func getGitHubNamesPerLanguage() []Contributor {
-	ctx := context.Background()
+type language struct {
+	Name string
+}
 
-	client, err := bigquery.NewClient(ctx, "289749835264")
+var (
+	bqClient      *bigquery.Client
+	hasToContinue bool
+)
+
+const authorsQueryString = "SELECT author.name as name, repo_name as repo FROM [bigquery-public-data:github_repos.commits] GROUP BY name, repo ORDER BY repo LIMIT 500 OFFSET "
+const languagesQueryString = "SELECT language.name as name from [bigquery-public-data:github_repos.languages] WHERE repo_name="
+
+func getGitHubNamesPerLanguage() []Contributor {
+	var err error
+	bqClient, err = bigquery.NewClient(context.Background(), "289749835264")
+
 	if err != nil {
 		log.Fatalf("Failed to create client: %v", err)
 	}
-	myDataset := client.Dataset("tmp_data")
 
-	myDataset.Delete(ctx) // make it empty first
-
-	if err := myDataset.Create(ctx); err != nil {
-		panic(err)
-		// TODO: Handle error.
-	}
-
-	query := client.Query("SELECT commits.author.name as name, commits.repo_name as repo, language.name as language  FROM FLATTEN([bigquery-public-data:github_repos.commits], repo_name) commits JOIN [bigquery-public-data:github_repos.languages] languages ON commits.repo_name=languages.repo_name")
-	query.AllowLargeResults = true
-	query.Dst = myDataset.Table("names_lang")
-	it, err := query.Read(ctx)
-	if err != nil {
-		panic(err)
-	}
-
+	runningQueries := 0
+	offset := 0
+	contributorsChan := make(chan Contributor)
+	doneChan := make(chan bool)
 	names := []Contributor{}
 
+	hasToContinue = true
+
+	for i := 0; i < 30; i++ { // start 30 routines
+		runningQueries++
+		go getContributorsForOffset(offset, contributorsChan, doneChan)
+		offset += 500
+	}
+L:
+	for {
+		select {
+		case <-doneChan:
+			fmt.Println("worker finished")
+			if hasToContinue {
+				go getContributorsForOffset(offset, contributorsChan, doneChan)
+				offset += 100
+			} else {
+				runningQueries--
+				if runningQueries == 0 {
+					break L
+				}
+			}
+
+		case contributor := <-contributorsChan:
+			names = append(names, contributor)
+		}
+	}
+
+	return names
+}
+
+func getContributorsForOffset(offset int, contributorsChan chan Contributor, done chan bool) {
+	query := bqClient.Query(authorsQueryString + strconv.Itoa(offset))
+	it, err := query.Read(context.Background())
+	if err != nil {
+		fmt.Println(err)
+	}
+	count := 0
 	for {
 		c := Contributor{}
 		err := it.Next(&c)
@@ -55,10 +94,40 @@ func getGitHubNamesPerLanguage() []Contributor {
 			fmt.Println(err)
 			continue
 		}
+		count++
 		c.Firstname = extractGitHubFirstName(c.Name)
-		names = append(names, c)
+		addLanguagesForContributor(c, contributorsChan)
 	}
-	return names
+	if count < 100 {
+		hasToContinue = false
+	}
+	done <- true
+}
+
+func addLanguagesForContributor(c Contributor, contributorsChan chan Contributor) {
+	query := bqClient.Query(languagesQueryString + "\"" + c.Repo + "\"")
+	it, err := query.Read(context.Background())
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	for {
+		var values []bigquery.Value
+		err := it.Next(&values)
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		for _, language := range values {
+			if language != nil {
+				c.Language = language.(string)
+				contributorsChan <- c
+			}
+		}
+	}
 }
 
 func getFirstNamesPerLanguage(names []Contributor) map[string][]string {
