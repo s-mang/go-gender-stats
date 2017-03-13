@@ -1,6 +1,6 @@
 # go-gender-stats
-1. pulls golang contributors list, predicts gender of each first name, prints gender stats
-2. pulls gophers slack members list, predicts gender, prints gender stats
+1. pulls golang contributors list (~1k people), predicts gender of each first name, prints gender stats
+2. pulls gophers slack members list (~10k people), predicts gender, prints gender stats
 
 # Disclaimer
 The purpose of this project is to try to give some (any) statistics to track improvement of the M/F gender ratio
