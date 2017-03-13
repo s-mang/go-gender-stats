@@ -78,6 +78,8 @@ L:
 }
 
 func getContributorsForOffset(offset int, contributorsChan chan Contributor, done chan bool) {
+	projectLanguages := map[string][]string{} // cache languages inside the goroutine
+
 	query := bqClient.Query(authorsQueryString + strconv.Itoa(offset))
 	it, err := query.Read(context.Background())
 	if err != nil {
@@ -96,7 +98,7 @@ func getContributorsForOffset(offset int, contributorsChan chan Contributor, don
 		}
 		count++
 		c.Firstname = extractGitHubFirstName(c.Name)
-		addLanguagesForContributor(c, contributorsChan)
+		addLanguagesForContributor(c, contributorsChan, projectLanguages)
 	}
 	if count < 100 {
 		hasToContinue = false
@@ -104,13 +106,21 @@ func getContributorsForOffset(offset int, contributorsChan chan Contributor, don
 	done <- true
 }
 
-func addLanguagesForContributor(c Contributor, contributorsChan chan Contributor) {
+func addLanguagesForContributor(c Contributor, contributorsChan chan Contributor, projectLanguages map[string][]string) {
+	if projectLanguages[c.Repo] != nil {
+		for _, language := range projectLanguages[c.Repo] {
+			c.Language = language
+			contributorsChan <- c
+		}
+		return
+	}
 	query := bqClient.Query(languagesQueryString + "\"" + c.Repo + "\"")
 	it, err := query.Read(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	languages := []string{}
 	for {
 		var values []bigquery.Value
 		err := it.Next(&values)
@@ -124,10 +134,12 @@ func addLanguagesForContributor(c Contributor, contributorsChan chan Contributor
 		for _, language := range values {
 			if language != nil {
 				c.Language = language.(string)
+				languages = append(languages, language.(string))
 				contributorsChan <- c
 			}
 		}
 	}
+	projectLanguages[c.Repo] = languages
 }
 
 func getFirstNamesPerLanguage(names []Contributor) map[string][]string {
