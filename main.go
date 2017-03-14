@@ -8,12 +8,24 @@ import (
 var logger *log.Logger
 
 func main() {
+
+	// GitHub Contributors
+	fmt.Println("\nGitHub contributors by language and gender:")
+	gitHubNames := getFirstNamesPerLanguage(getGitHubNamesPerLanguage())
+	fmt.Println(gitHubNames)
+
+	for lang, names := range gitHubNames {
+		fmt.Println(lang)
+		printStats(names)
+	}
+
 	// Go contributors
 	names, err := getContributorNames()
 	if err != nil {
 		panic(err.Error())
 	}
 
+	fmt.Println("-------------")
 	fmt.Println("\nGo Contributors by Gender:")
 	printStats(names)
 
