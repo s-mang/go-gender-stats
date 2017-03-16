@@ -1,6 +1,7 @@
 # go-gender-stats
-1. pulls golang contributors list (~1k people), predicts gender of each first name, prints gender stats
-2. pulls gophers slack members list (~10k people), predicts gender, prints gender stats
+1. pulls golang contributors list, predicts gender of each first name, prints gender stats
+2. pulls gophers slack members list, predicts gender, prints gender stats
+3. pulls Go committers from bigquery github archive, predicts gender, prints gender stats
 
 # Disclaimer
 The purpose of this project is to try to give some (any) statistics to track improvement of the M/F gender ratio
@@ -44,6 +45,40 @@ $ go-gender-stats
 ```
 
 # Output over time
+## output (03/15/2017, OpenGenderTracking Global Name Data)
+
+```
+
+Go Contributors by Gender:
+
+  - Female: 5.57%
+
+  - Male: 94.43%
+
+  # Total: 1149
+
+-------------
+
+Slack Gophers by Gender:
+
+  - Female: 6.92%
+
+  - Male: 93.08%
+
+  # Total: 14562
+
+-------------
+
+Github Go Committers by Gender:
+
+  - Female: 5.99%
+
+  - Male: 94.01%
+
+  # Total: 74582
+  
+```
+
 ## output (03/09/2017, OpenGenderTracking Global Name Data)
 
 ```
