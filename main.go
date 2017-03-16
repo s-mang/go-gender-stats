@@ -27,6 +27,16 @@ func main() {
 	fmt.Println("\nSlack Gophers by Gender:")
 	printStats(names)
 
+	// Github Go committers
+	// Gophers slack
+	names, err = getGoCommitterNames()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	fmt.Println("-------------")
+	fmt.Println("\nGithub Go Committers by Gender:")
+	printStats(names)
 }
 
 func printStats(names []string) {
@@ -39,6 +49,7 @@ func printStats(names []string) {
 	if percentUnknown > 0 {
 		fmt.Printf("\n  - Unknown: %.2f%%\n", percentUnknown)
 	}
+	fmt.Printf("\n  # Total: %d\n", len(names))
 
 	fmt.Printf("\n")
 
