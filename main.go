@@ -10,9 +10,8 @@ var logger *log.Logger
 func main() {
 
 	// GitHub Contributors
+	gitHubNames := getFirstNamesPerLanguage(getGitHubContributors())
 	fmt.Println("\nGitHub contributors by language and gender:")
-	gitHubNames := getFirstNamesPerLanguage(getGitHubNamesPerLanguage())
-	fmt.Println(gitHubNames)
 
 	for lang, names := range gitHubNames {
 		fmt.Println(lang)
@@ -45,11 +44,11 @@ func printStats(names []string) {
 	percentFemale, percentMale := predictGenderStats(names)
 	percentUnknown := (100 - percentFemale - percentMale)
 
-	fmt.Printf("\n  - Female: %.2f%%\n", percentFemale)
-	fmt.Printf("\n  - Male: %.2f%%\n", percentMale)
+	fmt.Printf("\n  - Female: %.8f%%\n", percentFemale)
+	fmt.Printf("\n  - Male: %.8f%%\n", percentMale)
 
 	if percentUnknown > 0 {
-		fmt.Printf("\n  - Unknown: %.2f%%\n", percentUnknown)
+		fmt.Printf("\n  - Unknown: %.8f%%\n", percentUnknown)
 	}
 
 	fmt.Printf("\n")
