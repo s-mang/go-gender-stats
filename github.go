@@ -162,7 +162,7 @@ func filterDuplicateNames(lang string, contributors []Contributor, out chan map[
 	firstNames := []string{}
 	for _, contributor := range contributors {
 		if _, exists := idsInSlice[contributor.ID]; !exists {
-			firstNames = append(firstNames, contributor.Firstname, strconv.Itoa(contributor.ID))
+			firstNames = append(firstNames, contributor.Firstname)
 			idsInSlice[contributor.ID] = true
 		}
 	}
