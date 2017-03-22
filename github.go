@@ -70,7 +70,7 @@ L:
 }
 
 func getContributorsForOffset(offset, limit int, contributorsChan chan Contributor, done chan bool) {
-	rows, err := db.Query("SELECT * FROM (SELECT u.id, language, u.name FROM commits c JOIN project_languages l ON c.project_id=l.project_id JOIN users u ON c.author_id=u.id WHERE c.id >= ? AND c.id < ? AND u.name is not null) q GROUP BY q.`language`, q.name, q.id", offset, offset+limit)
+	rows, err := db.Query("SELECT * FROM (SELECT u.id, p.language, u.name FROM commits c JOIN projects p ON c.project_id=p.id JOIN users u ON c.author_id=u.id WHERE c.id >= ? AND c.id < ? AND u.name is not null AND p.forked_from is null AND p.language is not null) q GROUP BY q.`language`, q.name, q.id", offset, offset+limit)
 	if err != nil {
 		panic(err)
 	}
