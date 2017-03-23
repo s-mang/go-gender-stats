@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -20,8 +19,7 @@ type Contributor struct {
 }
 
 var (
-	db     *sql.DB
-	nameRE = regexp.MustCompile("^[A-Z]*[a-z]+$")
+	db *sql.DB
 )
 
 const limit = 10000
@@ -83,7 +81,7 @@ func getContributorsForOffset(offset, limit int, contributorsChan chan Contribut
 			log.Fatal(err)
 		}
 		nameParts := strings.Split(contributor.Name, " ")
-		if len(nameParts) >= 2 && nameRE.Match([]byte(nameParts[0])) {
+		if len(nameParts) >= 2 {
 			contributor.Firstname = nameParts[0]
 			contributorsChan <- contributor
 		}
