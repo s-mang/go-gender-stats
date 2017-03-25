@@ -37,7 +37,7 @@ $ go get github.com/adams-sarah/go-gender-stats
 $ go-gender-stats
 ```
 
-## output (03/32/2017, GitHub all languages, OpenGenderTracking Global Name Data))
+## output (03/32/2017, GitHub all languages, OpenGenderTracking Global Name Data)
 See [https://eyskens.me/how-many-women-actually-go-c-rust-js..../](https://eyskens.me/how-many-women-actually-go-c-rust-js..../)
 
 Used dataset SQL dump available at [Google Drive](https://drive.google.com/file/d/0B2DN0LlE0FSlaDBsWk1PeDljbDA/view?usp=sharing)
